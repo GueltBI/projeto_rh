@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inserir Novo Funcionário</title>
+    {% load static %}
+    {% load crispy_forms_tags %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2C3E50;
+            color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+        }
+        .sidebar .logo {
+            text-align: center;
+            padding: 10px 0;
+        }
+        .sidebar .logo img {
+            max-width: 80%;
+        }
+        .sidebar a {
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            transition: background 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #34495e;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .header .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .header .user-info img {
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        .card form {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{% static 'app/logo.png' %}" alt="Logo">
+        </div>
+        <a> Developed by Business Intelligence Guelt </a>
+        <br>
+        <a href="{% url 'protected_view' %}">Dashboard</a>
+        <a href="#">Inserir Informações</a>
+        <a href="#">Forms</a>
+        <a href="#">Cards</a>
+        <a href="#">Modals</a>
+        <a href="#">Blank</a>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <div class="user-info">
+                <span>{{ user.username }}</span>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Inserir Novo Cadidato</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="nome">Nome</label>
+                        {{ form.nome|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="idade">Idade</label>
+                        {{ form.idade|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="linkedin">Linkedin</label>
+                        {{ form.linkedin|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="meio">Meio</label>
+                        {{ form.meio|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="uf">Uf</label>
+                        {{ form.uff|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="formacao">Formação</label>
+                    {{ form.formacao|as_crispy_field }}
+                </div>
+                <div class="form-group">
+                    <label for="hist_prof">Histórico Profissional</label>
+                    {{ form.hist_prof|as_crispy_field }}
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <label for="foco">Foco</label>
+                        {{ form.foco|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="pret_sal">Pretensão Salarial</label>
+                        {{ form.pret_sal|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="certificado">Certificados</label>
+                        {{ form.certificado|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cinco_anos">Plano de Cinco Anos</label>
+                    {{ form.cinco_anos|as_crispy_field }}
+                </div>
+                <div class="form-group">
+                    <label for="observacao">Observações</label>
+                    {{ form.observacao|as_crispy_field }}
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-2">                    
+                        <label for="status">Status</label>
+                        {{form.status|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-2">                    
+                        <label for="Perfil_Comercial">Perfil Comercial</label>
+                        {{form.Perfil_Comercial|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-4">                    
+                        <label for="Comportamento_Entrevista">Comportamento durante a entrevista?</label>
+                        {{form.Comportamento_Entrevista|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-4">                    
+                        <label for="Banco_de_Talentos">Vale a pena deixar no banco de talentos?</label>
+                        {{form.Banco_de_Talentos|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-2">                    
+                        <label for="pontos_forteis">Pontos Forteis</label>
+                        {{form.pontos_forteis|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-2">                    
+                        <label for="pontos_fracos">Pontos Fracos</label>
+                        {{form.pontos_fracos|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-4">                    
+                        <label for="DISC">Resultado do DISC</label>
+                        {{form.DISC|as_crispy_field }}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

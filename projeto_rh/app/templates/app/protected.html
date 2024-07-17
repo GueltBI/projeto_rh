@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2C3E50;
+            color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            overflow: auto;
+        }
+        .sidebar .logo {
+            text-align: center;
+            padding: 20px;
+        }
+        .sidebar .logo img {
+            max-width: 100%;
+        }
+        .sidebar a {
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            transition: background 0.3s;
+        }
+
+        .sidebar .developer {
+            padding: 15px 20px;
+            text-align: center; /* Centraliza o texto do desenvolvedor */
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 20px;
+            background-color: #ecf0f1;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #34495e;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .header .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .header .user-info img {
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            margin: 10px;
+            flex: 1 1 calc(25% - 40px);
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        .table-container {
+            background-color: #fff;
+            padding: 2px; /* mexi aqui cabecalho*/            
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            position: relative;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        table th {
+            background-color: #2C3E50;
+            color: white;
+            position: sticky;  /* ADD RECEN */
+            top: 1px;      /* ADD RECEN* mexi aqui tmb */ 
+            z-index: 1;    /* ADD RECEN */
+        }
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+        table .status.active {
+            color: green;
+        }
+        table .status.inactive {
+            color: red;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .sidebar a { float: left; }
+            .main-content { margin-left: 0; }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            .card {
+                flex: 1 1 100%;
+            }
+            .table-container {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{% static 'app/logo.png' %}" alt="Logo">
+        </div>
+        <a> Developed by Business Intelligence Guelt </a>
+        <br>
+        <a href="{% url 'protected_view' %}">Dashboard</a>
+        <a href="{% url 'inserir' %}">Inserir Informações</a>
+        <a href="">Forms</a>
+        <a href="">Cards</a>
+        <a href="">Modals</a>
+        <a href="">Blank</a>
+        <br>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <div class="user-info">
+                <span>{{ user.username }}</span>
+            </div>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <h3>Entrevistas Hoje</h3>
+                <p>{{ qtd_entrevistas_hoje }}</p>
+            </div>
+            <div class="card">
+                <h3>Entrevistas Ontem</h3>
+                <p>{{ qtd_entrevistas_ontem }}</p>
+            </div>
+            <div class="card">
+                <h3>Entrevistas no Mês</h3>
+                <p>{{ qtd_entrevistas_mes }}</p>
+            </div>
+            <div class="card">
+                <h3>Entrevistas no Ano</h3>
+                <p>{{ qtd_entrevistas_ano }}</p>
+            </div>
+        </div>
+        <div class="search-container">
+            <form method="GET">
+                <input type="text" name="search" class="form-control d-inline w-auto" placeholder="Buscar por nome" value="{{ search_query }}">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+        </div>
+        <div class="table-container">
+            <h3>Últimas Entrevistas</h3>
+            {{ table_html|safe }}
+        </div>
+        <br>
+        <div class="chart-container">
+            <h3>Entrevistas por Mês</h3>
+            <canvas id="interviewsChart"></canvas>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('interviewsChart').getContext('2d');
+        var interviewsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: JSON.parse('{{ labels|escapejs }}'),
+                datasets: [{
+                    label: 'Entrevistas por Mês',
+                    data: JSON.parse('{{ valores|escapejs }}'),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
